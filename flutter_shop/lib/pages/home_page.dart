@@ -64,8 +64,8 @@ class HomePageState extends State<HomePage> {
     try {
       Response response;
       response = await Dio()
-          .get("http://api.wangshuwen.com/getNews", queryParameters: data);
-      return response.data["data"][0]["title"];
+          .post("https://www.easy-mock.com/mock/5d57b989054ea47d2ee7209a/flutter_shop/detail/news", queryParameters: data);
+      return response.data["data"]["banners"][0]["target"]["subtitle"];
     } catch (e) {
       return print(e);
     }
