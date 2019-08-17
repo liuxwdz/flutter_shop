@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import '../configs/http_heads.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -18,22 +19,24 @@ class HomePageState extends State<HomePage> {
         appBar: AppBar(
           title: Text("天上人间"),
         ),
-        body: Container(
-          child: Column(
-            children: <Widget>[
-              TextField(
-                controller: _editingController,
-                decoration: InputDecoration(
-                    labelText: "美女类型",
-                    helperText: "请选择美女类型",
-                    contentPadding: EdgeInsets.all(10.0)),
-              ),
-              RaisedButton(
-                onPressed: _doAction,
-                child: Text("确认选择"),
-              ),
-              Text(textValue)
-            ],
+        body: SingleChildScrollView(
+          child: Container(
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: _editingController,
+                  decoration: InputDecoration(
+                      labelText: "美女类型",
+                      helperText: "请选择美女类型",
+                      contentPadding: EdgeInsets.all(10.0)),
+                ),
+                RaisedButton(
+                  onPressed: _doAction,
+                  child: Text("确认选择"),
+                ),
+                Text(textValue)
+              ],
+            ),
           ),
         ),
       ),
@@ -63,9 +66,11 @@ class HomePageState extends State<HomePage> {
     var data = {"page": 1};
     try {
       Response response;
-      response = await Dio()
-          .post("https://www.easy-mock.com/mock/5d57b989054ea47d2ee7209a/flutter_shop/detail/news", queryParameters: data);
-      return response.data["data"]["banners"][0]["target"]["subtitle"];
+      Dio dio = Dio();
+      dio.options.headers=heads;
+      response = await dio
+          .post("https://time.geekbang.org/serv/v1/column/newAll");
+      return response.data.toString();
     } catch (e) {
       return print(e);
     }
