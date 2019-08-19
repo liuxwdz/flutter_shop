@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:convert';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -49,8 +50,14 @@ class TopSwiper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(height: 1334, width: 750)..init(context);
+    print('Device width:${ScreenUtil.screenWidth}'); //Device width
+    print('Device height:${ScreenUtil.screenHeight}'); //Device height
+    print(
+        'Device pixel density:${ScreenUtil.pixelRatio}'); //Device pixel density
     return Container(
-      height: 222,
+      height: ScreenUtil.getInstance().setHeight(333),
+      width: ScreenUtil.getInstance().setWidth(750),
       child: Swiper(
         itemCount: swiperDataList.length,
         itemBuilder: (BuildContext context, int index) {
