@@ -3,6 +3,7 @@ import 'package:flutter_shop/service/service_method.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,6 +27,8 @@ class HomePageState extends State<HomePage> {
               List<Map> topNavgatorData = (data['category'] as List).cast();
               String adBannerPicture =
                   data['advertesPicture']['PICTURE_ADDRESS'];
+              String leaderPhone = data['shopInfo']['leaderPhone'];
+              String leaderImage = data['shopInfo']['leaderImage'];
               return Column(
                 children: <Widget>[
                   TopSwiper(
@@ -34,6 +37,10 @@ class HomePageState extends State<HomePage> {
                   TopNavgator(navgatorDataList: topNavgatorData),
                   AdBanner(
                     AdPicture: adBannerPicture,
+                  ),
+                  LeadPhone(
+                    leadPhone: leaderPhone,
+                    leadPicture: leaderImage,
                   )
                 ],
               );
@@ -124,5 +131,31 @@ class AdBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Image.network(AdPicture);
+  }
+}
+
+class LeadPhone extends StatelessWidget {
+  final String leadPhone;
+  final String leadPicture;
+
+  LeadPhone({this.leadPhone, this.leadPicture});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: InkWell(
+        onTap: _launchURL,
+        child: Image.network(leadPicture),
+      ),
+    );
+  }
+
+  void _launchURL() async {
+    String url = 'tel:' + leadPhone;
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
