@@ -1,38 +1,66 @@
 import 'package:flutter/material.dart';
-import '../configs/service_method.dart';
+import 'package:flutter_shop/service/service_method.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => HomePageState();
 }
 
-String homeContentText = '还没有获取数据';
-
 class HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-    getHomePageContent().then((onValue) {
-      setState(() {
-        homeContentText = onValue.toString();
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("天上人间"),
+          title: Text("百姓生活"),
         ),
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              children: <Widget>[Text(homeContentText)],
-            ),
-          ),
+        body: FutureBuilder(
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var swiperData = json.decode(snapshot.data.toString());
+              List<Map> swiperDataList =
+                  (swiperData['data']['slides'] as List).cast();
+              return Column(
+                children: <Widget>[
+                  TopSwiper(
+                    swiperDataList: swiperDataList,
+                  )
+                ],
+              );
+            } else {
+              return Center(
+                child: Text('数据还在加载中...'),
+              );
+            }
+          },
+          future: getHomePageContent(),
         ),
+      ),
+    );
+  }
+}
+
+class TopSwiper extends StatelessWidget {
+  List<Map> swiperDataList;
+
+  TopSwiper({this.swiperDataList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 222,
+      child: Swiper(
+        itemCount: swiperDataList.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Image.network(
+            swiperDataList[index]['image'],
+            fit: BoxFit.fill,
+          );
+        },
+        pagination: new SwiperPagination(),
+        autoplay: true,
       ),
     );
   }

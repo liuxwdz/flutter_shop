@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'dart:io';
-import 'services_urls.dart';
+import '../configs/services_urls.dart';
 
 Future getHomePageContent() async {
   print('开始获取首页数据');
