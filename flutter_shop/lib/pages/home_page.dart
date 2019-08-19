@@ -23,11 +23,14 @@ class HomePageState extends State<HomePage> {
               var swiperData = json.decode(snapshot.data.toString());
               List<Map> swiperDataList =
                   (swiperData['data']['slides'] as List).cast();
+              List<Map> topNavgatorData =
+                  (swiperData['data']['category'] as List).cast();
               return Column(
                 children: <Widget>[
                   TopSwiper(
                     swiperDataList: swiperDataList,
-                  )
+                  ),
+                  TopNavgator(navgatorDataList: topNavgatorData)
                 ],
               );
             } else {
@@ -50,11 +53,6 @@ class TopSwiper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.instance = ScreenUtil(height: 1334, width: 750)..init(context);
-    print('Device width:${ScreenUtil.screenWidth}'); //Device width
-    print('Device height:${ScreenUtil.screenHeight}'); //Device height
-    print(
-        'Device pixel density:${ScreenUtil.pixelRatio}'); //Device pixel density
     return Container(
       height: ScreenUtil.getInstance().setHeight(333),
       width: ScreenUtil.getInstance().setWidth(750),
@@ -68,6 +66,47 @@ class TopSwiper extends StatelessWidget {
         },
         pagination: new SwiperPagination(),
         autoplay: true,
+      ),
+    );
+  }
+}
+
+class TopNavgator extends StatelessWidget {
+  final List<Map> navgatorDataList;
+
+  TopNavgator({this.navgatorDataList});
+
+  @override
+  Widget build(BuildContext context) {
+    if (this.navgatorDataList.length > 10) {
+      this.navgatorDataList.removeRange(10, this.navgatorDataList.length);
+    }
+    return Container(
+      height: ScreenUtil().setHeight(320),
+      padding: EdgeInsets.all(3.0),
+      child: GridView.count(
+        crossAxisCount: 5,
+        padding: EdgeInsets.all(5.0),
+        children: navgatorDataList.map((item) {
+          return _getGridViewItem(context, item);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _getGridViewItem(BuildContext context, item) {
+    return InkWell(
+      onTap: () {
+        print('点击了当前条目${item['mallCategoryName']}');
+      },
+      child: Column(
+        children: <Widget>[
+          Image.network(
+            item['image'],
+            width: ScreenUtil.getInstance().setWidth(95),
+          ),
+          Text(item['mallCategoryName'])
+        ],
       ),
     );
   }

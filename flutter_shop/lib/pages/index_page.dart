@@ -3,6 +3,7 @@ import 'home_page.dart';
 import 'catogery_page.dart';
 import 'cart_page.dart';
 import 'member_page.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -29,6 +30,11 @@ class IndexPageState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.instance = ScreenUtil(height: 1334, width: 750)..init(context);
+    print('Device width:${ScreenUtil.screenWidth}'); //Device width
+    print('Device height:${ScreenUtil.screenHeight}'); //Device height
+    print(
+        'Device pixel density:${ScreenUtil.pixelRatio}'); //Device pixel density
     return Scaffold(
       body: pages[currentIndex],
       bottomNavigationBar: BottomNavigationBar(
