@@ -21,16 +21,20 @@ class HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               var swiperData = json.decode(snapshot.data.toString());
-              List<Map> swiperDataList =
-                  (swiperData['data']['slides'] as List).cast();
-              List<Map> topNavgatorData =
-                  (swiperData['data']['category'] as List).cast();
+              var data = swiperData['data'];
+              List<Map> swiperDataList = (data['slides'] as List).cast();
+              List<Map> topNavgatorData = (data['category'] as List).cast();
+              String adBannerPicture =
+                  data['advertesPicture']['PICTURE_ADDRESS'];
               return Column(
                 children: <Widget>[
                   TopSwiper(
                     swiperDataList: swiperDataList,
                   ),
-                  TopNavgator(navgatorDataList: topNavgatorData)
+                  TopNavgator(navgatorDataList: topNavgatorData),
+                  AdBanner(
+                    AdPicture: adBannerPicture,
+                  )
                 ],
               );
             } else {
@@ -109,5 +113,16 @@ class TopNavgator extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class AdBanner extends StatelessWidget {
+  final String AdPicture;
+
+  AdBanner({this.AdPicture});
+
+  @override
+  Widget build(BuildContext context) {
+    return Image.network(AdPicture);
   }
 }
