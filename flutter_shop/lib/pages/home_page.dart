@@ -29,21 +29,31 @@ class HomePageState extends State<HomePage> {
                   data['advertesPicture']['PICTURE_ADDRESS'];
               String leaderPhone = data['shopInfo']['leaderPhone'];
               String leaderImage = data['shopInfo']['leaderImage'];
-              return Column(
-                children: <Widget>[
-                  TopSwiper(
-                    swiperDataList: swiperDataList,
-                  ),
-                  TopNavgator(navgatorDataList: topNavgatorData),
-                  AdBanner(
-                    AdPicture: adBannerPicture,
-                  ),
-                  LeadPhone(
-                    leadPhone: leaderPhone,
-                    leadPicture: leaderImage,
-                  )
-                ],
-              );
+              List<Map> recommendDatas = (data['recommend'] as List).cast();
+              return SingleChildScrollView(
+                  child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.black12,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    TopSwiper(
+                      swiperDataList: swiperDataList,
+                    ),
+                    TopNavgator(navgatorDataList: topNavgatorData),
+                    AdBanner(
+                      AdPicture: adBannerPicture,
+                    ),
+                    LeadPhone(
+                      leadPhone: leaderPhone,
+                      leadPicture: leaderImage,
+                    ),
+                    Recommend(
+                      recommendList: recommendDatas,
+                    ),
+                  ],
+                ),
+              ));
             } else {
               return Center(
                 child: Text('数据还在加载中...'),
@@ -93,7 +103,8 @@ class TopNavgator extends StatelessWidget {
       this.navgatorDataList.removeRange(10, this.navgatorDataList.length);
     }
     return Container(
-      height: ScreenUtil().setHeight(320),
+      color: Colors.white,
+      height: ScreenUtil().setHeight(340),
       padding: EdgeInsets.all(3.0),
       child: GridView.count(
         crossAxisCount: 5,
@@ -157,5 +168,77 @@ class LeadPhone extends StatelessWidget {
     } else {
       throw 'Could not launch $url';
     }
+  }
+}
+
+//商品推荐
+class Recommend extends StatelessWidget {
+  final List recommendList;
+
+  Recommend({this.recommendList});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenUtil.getInstance().setHeight(450),
+      margin: EdgeInsets.only(top: 10.0),
+      child: Column(
+        children: <Widget>[_getRecommendTitle(), _getListView()],
+      ),
+    );
+  }
+
+  Widget _getRecommendTitle() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0),
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border:
+              Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
+      child: Text(
+        '商品推荐',
+        style: TextStyle(color: Colors.pink),
+      ),
+    );
+  }
+
+  Widget _getItem(item) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        alignment: Alignment.center,
+        width: ScreenUtil.getInstance().setWidth(250),
+        height: ScreenUtil.getInstance().setHeight(380),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border:
+                Border(left: BorderSide(width: 0.5, color: Colors.black12))),
+        child: Column(
+          children: <Widget>[
+            Image.network(item['image']),
+            Text('￥${item['mallPrice']}'),
+            Text(
+              '￥${item['price']}',
+              style: TextStyle(
+                  color: Colors.grey, decoration: TextDecoration.lineThrough),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getListView() {
+    return Container(
+      height: ScreenUtil.getInstance().setHeight(380),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return _getItem(recommendList[index]);
+        },
+        itemCount: recommendList.length,
+      ),
+    );
   }
 }
