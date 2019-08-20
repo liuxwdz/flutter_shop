@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../service/service_method.dart';
 import 'dart:convert';
+import '../model/catogery_data.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -33,7 +34,8 @@ class _CatogeryPageState extends State<CatogeryPage> {
       var jsonData = json.decode(value.toString());
       if (jsonData != null) {
         setState(() {
-          catogeryData = jsonData['data'].toString();
+          CatogeryData catogeryData = CatogeryData.fromJson(jsonData);
+          catogeryData.data.forEach((item) => print(item.mallCategoryName));
         });
       }
     });
