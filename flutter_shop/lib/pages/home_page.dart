@@ -4,6 +4,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,19 +14,6 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   int page = 1;
   List<Map> hotGoods = [];
-
-  @override
-  void initState() {
-    super.initState();
-    postRequest('homePageBelowConten', formData: page).then((onValue) {
-      var datas = json.decode(onValue.toString());
-      List<Map> newHotGoods = (datas['data'] as List).cast();
-      setState(() {
-        hotGoods.addAll(newHotGoods);
-        page++;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,49 +41,68 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               List<Map> floorGoods1 = (data['floor1'] as List).cast();
               List<Map> floorGoods2 = (data['floor2'] as List).cast();
               List<Map> floorGoods3 = (data['floor3'] as List).cast();
-              return SingleChildScrollView(
-                  child: Container(
+              return Container(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 239, 239, 239),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    TopSwiper(
-                      swiperDataList: swiperDataList,
+                child: EasyRefresh(
+                    footer: ClassicalFooter(
+                      bgColor: Colors.white,
+                      textColor: Colors.pink,
+                      noMoreText: '',
+                      loadReadyText: '松手加载更多',
+                      loadingText: '加载中...',
+                      infoText: '已更新',
+                      infoColor: Colors.pink,
                     ),
-                    TopNavgator(navgatorDataList: topNavgatorData),
-                    AdBanner(
-                      AdPicture: adBannerPicture,
-                    ),
-                    LeadPhone(
-                      leadPhone: leaderPhone,
-                      leadPicture: leaderImage,
-                    ),
-                    Recommend(
-                      recommendList: recommendDatas,
-                    ),
-                    FloorGoodsTitle(
-                      floorPicture: floorTitlePic1,
-                    ),
-                    FloorGoods(
-                      floorGoodsList: floorGoods1,
-                    ),
-                    FloorGoodsTitle(
-                      floorPicture: floorTitlePic2,
-                    ),
-                    FloorGoods(
-                      floorGoodsList: floorGoods2,
-                    ),
-                    FloorGoodsTitle(
-                      floorPicture: floorTitlePic3,
-                    ),
-                    FloorGoods(
-                      floorGoodsList: floorGoods3,
-                    ),
-                    getHotWidget()
-                  ],
-                ),
-              ));
+                    onLoad: () async {
+                      print('onLoad:page=${page}');
+                      await postRequest('homePageBelowConten', formData: page)
+                          .then((onValue) {
+                        var datas = json.decode(onValue.toString());
+                        List<Map> newHotGoods = (datas['data'] as List).cast();
+                        setState(() {
+                          hotGoods.addAll(newHotGoods);
+                          page++;
+                        });
+                      });
+                    },
+                    child: ListView(children: <Widget>[
+                      TopSwiper(
+                        swiperDataList: swiperDataList,
+                      ),
+                      TopNavgator(navgatorDataList: topNavgatorData),
+                      AdBanner(
+                        AdPicture: adBannerPicture,
+                      ),
+                      LeadPhone(
+                        leadPhone: leaderPhone,
+                        leadPicture: leaderImage,
+                      ),
+                      Recommend(
+                        recommendList: recommendDatas,
+                      ),
+                      FloorGoodsTitle(
+                        floorPicture: floorTitlePic1,
+                      ),
+                      FloorGoods(
+                        floorGoodsList: floorGoods1,
+                      ),
+                      FloorGoodsTitle(
+                        floorPicture: floorTitlePic2,
+                      ),
+                      FloorGoods(
+                        floorGoodsList: floorGoods2,
+                      ),
+                      FloorGoodsTitle(
+                        floorPicture: floorTitlePic3,
+                      ),
+                      FloorGoods(
+                        floorGoodsList: floorGoods3,
+                      ),
+                      getHotWidget()
+                    ])),
+              );
             } else {
               return Center(
                 child: Text('数据还在加载中...'),
