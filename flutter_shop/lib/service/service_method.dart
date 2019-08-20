@@ -20,3 +20,27 @@ Future getHomePageContent() async {
     return print(e);
   }
 }
+
+Future postRequest(String urlKey, {formData}) async {
+  print('开始获取数据');
+  Response response;
+  try {
+    Dio dio = Dio();
+    dio.options.contentType =
+        ContentType.parse('application/x-www-form-urlencoded');
+    if (formData == null) {
+      response = await dio.post(
+        servicePath[urlKey],
+      );
+    } else {
+      response = await dio.post(servicePath[urlKey], data: formData);
+    }
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception(urlKey + '接口异常');
+    }
+  } catch (e) {
+    return print(e);
+  }
+}

@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    var data = {'lon': '114.06667', 'lat': '22.61667'};
     return Container(
       child: Scaffold(
         appBar: AppBar(
@@ -75,6 +76,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     FloorGoods(
                       floorGoodsList: floorGoods3,
                     ),
+                    HotGoods()
                   ],
                 ),
               ));
@@ -84,7 +86,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               );
             }
           },
-          future: getHomePageContent(),
+          future: postRequest('homePageContent', formData: data),
         ),
       ),
     );
@@ -327,5 +329,26 @@ class FloorGoods extends StatelessWidget {
         _getItem(floorGoodsList[4]),
       ],
     );
+  }
+}
+
+//火爆专场
+class HotGoods extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => HotGoodsState();
+}
+
+class HotGoodsState extends State<HotGoods> {
+  @override
+  void initState() {
+    super.initState();
+    postRequest('homePageBelowConten', formData: 1).then((onValue) {
+      print(onValue.toString());
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text('火爆专区');
   }
 }
