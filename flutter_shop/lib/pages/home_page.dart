@@ -11,6 +11,22 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+  int page = 1;
+  List<Map> hotGoods = [];
+
+  @override
+  void initState() {
+    super.initState();
+    postRequest('homePageBelowConten', formData: page).then((onValue) {
+      var datas = json.decode(onValue.toString());
+      List<Map> newHotGoods = (datas['data'] as List).cast();
+      setState(() {
+        hotGoods.addAll(newHotGoods);
+        page++;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var data = {'lon': '114.06667', 'lat': '22.61667'};
@@ -76,7 +92,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     FloorGoods(
                       floorGoodsList: floorGoods3,
                     ),
-                    HotGoods()
+                    getHotWidget()
                   ],
                 ),
               ));
@@ -94,6 +110,91 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget getHotWidget() {
+    return Column(
+      children: <Widget>[_getHotTitle(), _getHotWrap()],
+    );
+  }
+
+  Widget _getHotTitle() {
+    return Container(
+      width: ScreenUtil.getInstance().setWidth(750),
+      alignment: Alignment.center,
+      padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+      decoration: BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.black12, width: 0.5)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            Icons.copyright,
+            color: Colors.pink,
+            size: 30.0,
+          ),
+          Text(
+            '火爆专区',
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _getHotWrap() {
+    if (hotGoods.length > 0) {
+      List<Widget> hotGoodsView = hotGoods.map((item) {
+        return _getHotItem(item);
+      }).toList();
+
+      return Wrap(
+        spacing: 2,
+        children: hotGoodsView,
+      );
+    } else {
+      return Text('');
+    }
+  }
+
+  Widget _getHotItem(Map item) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        alignment: Alignment.center,
+        width: ScreenUtil.getInstance().setWidth(372),
+        color: Colors.white,
+        padding: EdgeInsets.all(5.0),
+        child: Column(
+          children: <Widget>[
+            Image.network(item['image']),
+            Text(
+              item['name'],
+              style: TextStyle(
+                  color: Colors.pink,
+                  fontSize: ScreenUtil.getInstance().setSp(26)),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Row(
+              children: <Widget>[
+                Text('￥${item['mallPrice']}'),
+                SizedBox(
+                  width: ScreenUtil.getInstance().setWidth(60.0),
+                ),
+                Text(
+                  '￥${item['price']}',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    decoration: TextDecoration.lineThrough,
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class TopSwiper extends StatelessWidget {
@@ -342,9 +443,6 @@ class HotGoodsState extends State<HotGoods> {
   @override
   void initState() {
     super.initState();
-    postRequest('homePageBelowConten', formData: 1).then((onValue) {
-      print(onValue.toString());
-    });
   }
 
   @override
