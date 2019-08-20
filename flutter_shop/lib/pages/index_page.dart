@@ -19,7 +19,12 @@ class IndexPageState extends State<IndexPage> {
     BottomNavigationBarItem(icon: Icon(Icons.person), title: Text("会员中心")),
   ];
 
-  final List pages = [HomePage(), CatogeryPage(), CartPage(), MemberPage()];
+  final List<Widget> pages = [
+    HomePage(),
+    CatogeryPage(),
+    CartPage(),
+    MemberPage()
+  ];
 
   int currentIndex = 0;
 
@@ -36,7 +41,10 @@ class IndexPageState extends State<IndexPage> {
     print(
         'Device pixel density:${ScreenUtil.pixelRatio}'); //Device pixel density
     return Scaffold(
-      body: pages[currentIndex],
+      body: IndexedStack(
+        index: currentIndex,
+        children: pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: bottomItems,
         type: BottomNavigationBarType.fixed,
