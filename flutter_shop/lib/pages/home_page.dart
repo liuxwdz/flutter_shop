@@ -52,7 +52,7 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                       noMoreText: '',
                       loadReadyText: '松手加载更多',
                       loadingText: '加载中...',
-                      infoText: '已更新',
+                      infoText: '',
                       infoColor: Colors.pink,
                     ),
                     onLoad: () async {
@@ -244,6 +244,7 @@ class TopNavgator extends StatelessWidget {
       height: ScreenUtil().setHeight(340),
       padding: EdgeInsets.all(3.0),
       child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 5,
         padding: EdgeInsets.all(5.0),
         children: navgatorDataList.map((item) {
