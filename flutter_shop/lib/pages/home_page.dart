@@ -30,10 +30,16 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
               String leaderPhone = data['shopInfo']['leaderPhone'];
               String leaderImage = data['shopInfo']['leaderImage'];
               List<Map> recommendDatas = (data['recommend'] as List).cast();
+              String floorTitlePic1 = data['floor1Pic']['PICTURE_ADDRESS'];
+              String floorTitlePic2 = data['floor2Pic']['PICTURE_ADDRESS'];
+              String floorTitlePic3 = data['floor3Pic']['PICTURE_ADDRESS'];
+              List<Map> floorGoods1 = (data['floor1'] as List).cast();
+              List<Map> floorGoods2 = (data['floor2'] as List).cast();
+              List<Map> floorGoods3 = (data['floor3'] as List).cast();
               return SingleChildScrollView(
                   child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.black12,
+                  color: Color.fromARGB(255, 239, 239, 239),
                 ),
                 child: Column(
                   children: <Widget>[
@@ -50,6 +56,24 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
                     ),
                     Recommend(
                       recommendList: recommendDatas,
+                    ),
+                    FloorGoodsTitle(
+                      floorPicture: floorTitlePic1,
+                    ),
+                    FloorGoods(
+                      floorGoodsList: floorGoods1,
+                    ),
+                    FloorGoodsTitle(
+                      floorPicture: floorTitlePic2,
+                    ),
+                    FloorGoods(
+                      floorGoodsList: floorGoods2,
+                    ),
+                    FloorGoodsTitle(
+                      floorPicture: floorTitlePic3,
+                    ),
+                    FloorGoods(
+                      floorGoodsList: floorGoods3,
                     ),
                   ],
                 ),
@@ -242,6 +266,66 @@ class Recommend extends StatelessWidget {
         },
         itemCount: recommendList.length,
       ),
+    );
+  }
+}
+
+//楼层商品标题
+class FloorGoodsTitle extends StatelessWidget {
+  final String floorPicture;
+
+  const FloorGoodsTitle({Key key, this.floorPicture}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Image.network(floorPicture),
+    );
+  }
+}
+
+class FloorGoods extends StatelessWidget {
+  final List floorGoodsList;
+
+  const FloorGoods({Key key, this.floorGoodsList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[_getFirstFloor(), _getSecondFloor()],
+      ),
+    );
+  }
+
+  Widget _getItem(Map item) {
+    return Container(
+      width: ScreenUtil.getInstance().setWidth(375.0),
+      child: Image.network(item['image']),
+    );
+  }
+
+  Widget _getFirstFloor() {
+    return Row(
+      children: <Widget>[
+        _getItem(floorGoodsList[0]),
+        Column(
+          children: <Widget>[
+            _getItem(floorGoodsList[1]),
+            _getItem(floorGoodsList[2]),
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _getSecondFloor() {
+    return Row(
+      children: <Widget>[
+        _getItem(floorGoodsList[3]),
+        _getItem(floorGoodsList[4]),
+      ],
     );
   }
 }
