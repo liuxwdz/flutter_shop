@@ -5,6 +5,7 @@ import '../model/catogery_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import '../provide/child_catogery.dart';
+import '../model/catogery_goods_data.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _CatogeryPageState extends State<CatogeryPage> {
           children: <Widget>[
             LeftCatogeryNav(),
             Column(
-              children: <Widget>[RightCatogeryNav()],
+              children: <Widget>[RightCatogeryNav(), CatogeryGoodsList()],
             )
           ],
         ),
@@ -159,5 +160,37 @@ class _RightCatogeryNavState extends State<RightCatogeryNav> {
         ),
       ),
     );
+  }
+}
+
+//分类商品列表
+class CatogeryGoodsList extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _CatogeryGoodsListState();
+}
+
+class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
+  String defultText = '没有获取分类商品';
+
+  @override
+  void initState() {
+    _getCatogeryGoods();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(defultText);
+  }
+
+  void _getCatogeryGoods() async {
+    var data = {'categoryId': '4', 'categorySubId': "", 'page': 1};
+    await postRequest('getMallGoods', formData: data).then((value) {
+      var decode = json.decode(value.toString());
+      CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
+      setState(() {
+        defultText = catogeryGoodsData.data[0].goodsName;
+      });
+    });
   }
 }
