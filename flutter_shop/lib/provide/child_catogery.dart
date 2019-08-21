@@ -5,7 +5,13 @@ class ChildCatogery with ChangeNotifier {
   List<BxMallSubDto> childCatogeryList = [];
 
   void changeChildCatogeryList(List<BxMallSubDto> list) {
-    childCatogeryList = list;
+    BxMallSubDto all = BxMallSubDto();
+    all.mallSubName = '全部';
+    all.mallCategoryId = '00';
+    all.mallSubId = '00';
+    all.comments = '';
+    childCatogeryList = [all];
+    childCatogeryList.addAll(list);
     notifyListeners();
   }
 }

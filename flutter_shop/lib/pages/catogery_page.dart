@@ -45,7 +45,7 @@ class LeftCatogeryNav extends StatefulWidget {
 
 class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   List catogeryList = [];
-  int currentIndex = -1;
+  int currentIndex = 0;
 
   @override
   void initState() {
@@ -71,10 +71,11 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   Widget _getItemWidget(int index) {
     return Container(
       padding: EdgeInsets.only(left: 10.0),
-      alignment: Alignment.centerLeft,
       height: ScreenUtil.getInstance().setHeight(100),
       decoration: BoxDecoration(
-          color: (index == currentIndex) ? Colors.grey : Colors.white,
+          color: (index == currentIndex)
+              ? Color.fromARGB(255, 239, 239, 239)
+              : Colors.white,
           border:
               Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
       child: InkWell(
@@ -86,9 +87,14 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
           Provide.value<ChildCatogery>(context)
               .changeChildCatogeryList(childCatogery);
         },
-        child: Text(
-          catogeryList[index].mallCategoryName,
-          style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(26)),
+        child: Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            catogeryList[index].mallCategoryName,
+            style: TextStyle(
+              fontSize: ScreenUtil.getInstance().setSp(26),
+            ),
+          ),
         ),
       ),
     );
@@ -101,6 +107,10 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
         setState(() {
           CatogeryData catogeryData = CatogeryData.fromJson(jsonData);
           catogeryList = catogeryData.data;
+          List childCatogery = catogeryList[0].bxMallSubDto;
+          currentIndex = 0;
+          Provide.value<ChildCatogery>(context)
+              .changeChildCatogeryList(childCatogery);
         });
       }
     });
