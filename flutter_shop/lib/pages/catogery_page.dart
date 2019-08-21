@@ -25,6 +25,9 @@ class _CatogeryPageState extends State<CatogeryPage> {
         child: Row(
           children: <Widget>[
             LeftCatogeryNav(),
+            Column(
+              children: <Widget>[RightCatogeryNav()],
+            )
           ],
         ),
       ),
@@ -94,5 +97,48 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
         });
       }
     });
+  }
+}
+
+//右侧具体商品
+class RightCatogeryNav extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _RightCatogeryNavState();
+}
+
+class _RightCatogeryNavState extends State<RightCatogeryNav> {
+  List detailCatogerys = ['洋河', '五粮液', '二锅头', '泸州老窖', '水井坊', '劲酒', '茅台', '汾酒'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: ScreenUtil.getInstance().setWidth(570),
+      height: ScreenUtil.getInstance().setHeight(80),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border:
+              Border(bottom: BorderSide(color: Colors.black12, width: 0.5))),
+      child: ListView.builder(
+        itemBuilder: (context, index) {
+          return _getItemWidget(index);
+        },
+        itemCount: detailCatogerys.length,
+        scrollDirection: Axis.horizontal,
+      ),
+    );
+  }
+
+  Widget _getItemWidget(int index) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(3.0, 5.0, 3.0, 5.0),
+      alignment: Alignment.centerLeft,
+      child: InkWell(
+        onTap: () {},
+        child: Text(
+          detailCatogerys[index],
+          style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(26.0)),
+        ),
+      ),
+    );
   }
 }
