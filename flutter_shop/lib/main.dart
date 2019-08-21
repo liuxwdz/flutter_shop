@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'pages/index_page.dart';
 import 'provide/counter.dart';
 import 'package:provide/provide.dart';
+import 'provide/child_catogery.dart';
 
 void main() {
   final provide = Providers()
-    ..provide(Provider.function((context) => Counter(0)));
+    ..provide(Provider.function((context) => Counter(0)))
+    ..provide(Provider.function((context) => ChildCatogery()));
   runApp(ProviderNode(child: MyApp(), providers: provide));
 }
 

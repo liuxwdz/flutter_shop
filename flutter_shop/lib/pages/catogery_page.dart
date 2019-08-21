@@ -3,6 +3,8 @@ import '../service/service_method.dart';
 import 'dart:convert';
 import '../model/catogery_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import '../provide/child_catogery.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -43,6 +45,7 @@ class LeftCatogeryNav extends StatefulWidget {
 
 class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   List catogeryList = [];
+  int currentIndex = -1;
 
   @override
   void initState() {
@@ -53,10 +56,7 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 10.0),
       decoration: BoxDecoration(
-          color: Colors.white,
           border: Border(right: BorderSide(width: 0.5, color: Colors.black12))),
       width: ScreenUtil.getInstance().setWidth(180),
       child: ListView.builder(
@@ -70,14 +70,21 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
 
   Widget _getItemWidget(int index) {
     return Container(
+      padding: EdgeInsets.only(left: 10.0),
       alignment: Alignment.centerLeft,
       height: ScreenUtil.getInstance().setHeight(100),
       decoration: BoxDecoration(
+          color: (index == currentIndex) ? Colors.grey : Colors.white,
           border:
               Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
       child: InkWell(
         onTap: () {
-          print('点击了分类条目');
+          setState(() {
+            currentIndex = index;
+          });
+          List childCatogery = catogeryList[index].bxMallSubDto;
+          Provide.value<ChildCatogery>(context)
+              .changeChildCatogeryList(childCatogery);
         },
         child: Text(
           catogeryList[index].mallCategoryName,
@@ -107,35 +114,37 @@ class RightCatogeryNav extends StatefulWidget {
 }
 
 class _RightCatogeryNavState extends State<RightCatogeryNav> {
-  List detailCatogerys = ['洋河', '五粮液', '二锅头', '泸州老窖', '水井坊', '劲酒', '茅台', '汾酒'];
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: ScreenUtil.getInstance().setWidth(570),
-      height: ScreenUtil.getInstance().setHeight(80),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          border:
-              Border(bottom: BorderSide(color: Colors.black12, width: 0.5))),
-      child: ListView.builder(
-        itemBuilder: (context, index) {
-          return _getItemWidget(index);
-        },
-        itemCount: detailCatogerys.length,
-        scrollDirection: Axis.horizontal,
-      ),
+    return Provide<ChildCatogery>(
+      builder: (context, child, childCatogery) {
+        return Container(
+          width: ScreenUtil.getInstance().setWidth(570),
+          height: ScreenUtil.getInstance().setHeight(80),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  bottom: BorderSide(color: Colors.black12, width: 0.5))),
+          child: ListView.builder(
+            itemBuilder: (context, index) {
+              return _getItemWidget(childCatogery.childCatogeryList[index]);
+            },
+            itemCount: childCatogery.childCatogeryList.length,
+            scrollDirection: Axis.horizontal,
+          ),
+        );
+      },
     );
   }
 
-  Widget _getItemWidget(int index) {
+  Widget _getItemWidget(BxMallSubDto item) {
     return Container(
       padding: EdgeInsets.fromLTRB(3.0, 5.0, 3.0, 5.0),
       alignment: Alignment.centerLeft,
       child: InkWell(
         onTap: () {},
         child: Text(
-          detailCatogerys[index],
+          item.mallSubName,
           style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(26.0)),
         ),
       ),
