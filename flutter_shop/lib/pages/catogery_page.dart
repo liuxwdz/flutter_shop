@@ -170,7 +170,7 @@ class CatogeryGoodsList extends StatefulWidget {
 }
 
 class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
-  String defultText = '没有获取分类商品';
+  List goods = [];
 
   @override
   void initState() {
@@ -180,7 +180,10 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
 
   @override
   Widget build(BuildContext context) {
-    return Text(defultText);
+    return Expanded(child: Container(
+      width: ScreenUtil.getInstance().setWidth(570.0),
+      child: getGoodsView(),
+    ));
   }
 
   void _getCatogeryGoods() async {
@@ -189,8 +192,63 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
       var decode = json.decode(value.toString());
       CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
       setState(() {
-        defultText = catogeryGoodsData.data[0].goodsName;
+        goods = catogeryGoodsData.data;
       });
     });
+  }
+
+  Widget getGoodsView() {
+    if (goods.length > 0) {
+      return GridView.builder(
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,),
+        scrollDirection: Axis.vertical,
+        itemCount: goods.length,
+        itemBuilder: (context, index) {
+          return getItem(goods[index]);
+        },
+      );
+    } else {
+      return Text('');
+    }
+  }
+
+  Widget getItem(DataListBean dataListBean) {
+    return InkWell(
+      onTap: () {},
+      child: Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(5.0),
+        width: ScreenUtil.getInstance().setWidth(285.0),
+        child: Column(
+          children: <Widget>[
+            Image.network(
+              dataListBean.image,
+              width: ScreenUtil.getInstance().setWidth(180.0),
+            ),
+            Text(
+              dataListBean.goodsName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: Colors.pink,
+                fontSize: ScreenUtil.getInstance().setSp(26.0),
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Text('￥${dataListBean.presentPrice}'),
+                Text(
+                  '￥${dataListBean.oriPrice}',
+                  style: TextStyle(
+                      color: Colors.grey,
+                      decoration: TextDecoration.lineThrough),
+                )
+              ],
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
