@@ -4,8 +4,12 @@ import '../model/catogery_data.dart';
 class ChildCatogery with ChangeNotifier {
   int currentIndex = 0;
   List<BxMallSubDto> childCatogeryList = [];
+  String curMallCategoryId = '4';
+  String curSubCategoryId = '';
 
-  void changeChildCatogeryList(List<BxMallSubDto> list) {
+  void changeChildCatogeryList(List<BxMallSubDto> list, String mallCategoryId) {
+    curMallCategoryId = mallCategoryId;
+    curSubCategoryId = '';
     currentIndex = 0;
     BxMallSubDto all = BxMallSubDto();
     all.mallSubName = '全部';
@@ -17,8 +21,9 @@ class ChildCatogery with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeCurrentIndex(int clickIndex) {
+  void changeCurrentIndex(int clickIndex, String subCategoryId) {
     currentIndex = clickIndex;
+    curSubCategoryId = subCategoryId;
     notifyListeners();
   }
 }

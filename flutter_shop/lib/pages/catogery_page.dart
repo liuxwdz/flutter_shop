@@ -52,7 +52,7 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   @override
   void initState() {
     _getCatogery();
-    _getCatogeryGoods();
+    _getCatogeryGoods(context);
     super.initState();
   }
 
@@ -87,9 +87,10 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
             currentIndex = index;
           });
           List childCatogery = catogeryList[index].bxMallSubDto;
-          Provide.value<ChildCatogery>(context)
-              .changeChildCatogeryList(childCatogery);
-          _getCatogeryGoods(categoryId: catogeryList[index].mallCategoryId);
+          Provide.value<ChildCatogery>(context).changeChildCatogeryList(
+              childCatogery, catogeryList[index].mallCategoryId);
+          _getCatogeryGoods(context,
+              categoryId: catogeryList[index].mallCategoryId);
         },
         child: Container(
           alignment: Alignment.centerLeft,
@@ -113,24 +114,10 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
           catogeryList = catogeryData.data;
           List childCatogery = catogeryList[0].bxMallSubDto;
           currentIndex = 0;
-          Provide.value<ChildCatogery>(context)
-              .changeChildCatogeryList(childCatogery);
+          Provide.value<ChildCatogery>(context).changeChildCatogeryList(
+              childCatogery, catogeryList[0].mallCategoryId);
         });
       }
-    });
-  }
-
-  void _getCatogeryGoods({String categoryId}) async {
-    var data = {
-      'categoryId': categoryId == null ? '4' : categoryId,
-      'categorySubId': "",
-      'page': 1
-    };
-    await postRequest('getMallGoods', formData: data).then((value) {
-      var decode = json.decode(value.toString());
-      CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
-      Provide.value<CatogeryGoodsListProvide>(context)
-          .changeGoodsList(catogeryGoodsData.data);
     });
   }
 }
@@ -174,7 +161,9 @@ class _RightCatogeryNavState extends State<RightCatogeryNav> {
       alignment: Alignment.centerLeft,
       child: InkWell(
         onTap: () {
-          Provide.value<ChildCatogery>(context).changeCurrentIndex(index);
+          Provide.value<ChildCatogery>(context)
+              .changeCurrentIndex(index, item.mallSubId);
+          _getCatogeryGoods(context, categorySubId: item.mallSubId);
         },
         child: Text(
           item.mallSubName,
@@ -198,11 +187,17 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
   Widget build(BuildContext context) {
     return Provide<CatogeryGoodsListProvide>(
       builder: (context, child, data) {
-        return Expanded(
-            child: Container(
-          width: ScreenUtil.getInstance().setWidth(570.0),
-          child: getGoodsView(data.goodsList),
-        ));
+        if (data.goodsList.length > 0) {
+          return Expanded(
+              child: Container(
+            width: ScreenUtil.getInstance().setWidth(570.0),
+            child: getGoodsView(data.goodsList),
+          ));
+        } else {
+          return Center(
+            child: Text('暂时没有数据'),
+          );
+        }
       },
     );
   }
@@ -262,4 +257,23 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
       ),
     );
   }
+}
+
+void _getCatogeryGoods(BuildContext context,
+    {String categoryId, String categorySubId}) async {
+  var data = {
+    'categoryId': categoryId == null ? '4' : categoryId,
+    'categorySubId': categorySubId == null ? "" : categorySubId,
+    'page': 1
+  };
+  await postRequest('getMallGoods', formData: data).then((value) {
+    var decode = json.decode(value.toString());
+    CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
+    if (catogeryGoodsData.data != null && catogeryGoodsData.data.length > 0) {
+      Provide.value<CatogeryGoodsListProvide>(context)
+          .changeGoodsList(catogeryGoodsData.data);
+    } else {
+      Provide.value<CatogeryGoodsListProvide>(context).changeGoodsList([]);
+    }
+  });
 }
