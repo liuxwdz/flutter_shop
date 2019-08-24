@@ -8,4 +8,9 @@ class CatogeryGoodsListProvide with ChangeNotifier {
     goodsList = goods;
     notifyListeners();
   }
+
+  void changeGoodsListMore(List<DataListBean> goods) {
+    goodsList.addAll(goods);
+    notifyListeners();
+  }
 }

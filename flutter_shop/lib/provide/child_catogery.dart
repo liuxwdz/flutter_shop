@@ -6,11 +6,15 @@ class ChildCatogery with ChangeNotifier {
   List<BxMallSubDto> childCatogeryList = [];
   String curMallCategoryId = '4';
   String curSubCategoryId = '';
+  String noMoreText = '';
+  int curPage = 1;
 
   void changeChildCatogeryList(List<BxMallSubDto> list, String mallCategoryId) {
     curMallCategoryId = mallCategoryId;
     curSubCategoryId = '';
     currentIndex = 0;
+    noMoreText = '';
+    curPage = 1;
     BxMallSubDto all = BxMallSubDto();
     all.mallSubName = '全部';
     all.mallCategoryId = '00';
@@ -24,6 +28,17 @@ class ChildCatogery with ChangeNotifier {
   void changeCurrentIndex(int clickIndex, String subCategoryId) {
     currentIndex = clickIndex;
     curSubCategoryId = subCategoryId;
+    noMoreText = '';
+    curPage = 1;
     notifyListeners();
+  }
+
+  void changeNoMoreText(String noMore) {
+    noMoreText = noMore;
+    notifyListeners();
+  }
+
+  void addPage() {
+    curPage++;
   }
 }
