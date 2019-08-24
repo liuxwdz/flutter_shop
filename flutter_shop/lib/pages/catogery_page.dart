@@ -155,7 +155,8 @@ class _RightCatogeryNavState extends State<RightCatogeryNav> {
                   bottom: BorderSide(color: Colors.black12, width: 0.5))),
           child: ListView.builder(
             itemBuilder: (context, index) {
-              return _getItemWidget(childCatogery.childCatogeryList[index]);
+              return _getItemWidget(
+                  index, childCatogery.childCatogeryList[index]);
             },
             itemCount: childCatogery.childCatogeryList.length,
             scrollDirection: Axis.horizontal,
@@ -165,15 +166,21 @@ class _RightCatogeryNavState extends State<RightCatogeryNav> {
     );
   }
 
-  Widget _getItemWidget(BxMallSubDto item) {
+  Widget _getItemWidget(int index, BxMallSubDto item) {
+    bool isSelected = false;
+    isSelected = (index == Provide.value<ChildCatogery>(context).currentIndex);
     return Container(
       padding: EdgeInsets.fromLTRB(3.0, 5.0, 3.0, 5.0),
       alignment: Alignment.centerLeft,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Provide.value<ChildCatogery>(context).changeCurrentIndex(index);
+        },
         child: Text(
           item.mallSubName,
-          style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(26.0)),
+          style: TextStyle(
+              fontSize: ScreenUtil.getInstance().setSp(26.0),
+              color: isSelected ? Colors.pink : Colors.black),
         ),
       ),
     );
