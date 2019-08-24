@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import '../provide/child_catogery.dart';
 import '../model/catogery_goods_data.dart';
+import '../provide/child_catogery_goodslist.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -50,8 +51,9 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
 
   @override
   void initState() {
-    super.initState();
     _getCatogery();
+    _getCatogeryGoods();
+    super.initState();
   }
 
   @override
@@ -87,6 +89,7 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
           List childCatogery = catogeryList[index].bxMallSubDto;
           Provide.value<ChildCatogery>(context)
               .changeChildCatogeryList(childCatogery);
+          _getCatogeryGoods(categoryId: catogeryList[index].mallCategoryId);
         },
         child: Container(
           alignment: Alignment.centerLeft,
@@ -114,6 +117,20 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
               .changeChildCatogeryList(childCatogery);
         });
       }
+    });
+  }
+
+  void _getCatogeryGoods({String categoryId}) async {
+    var data = {
+      'categoryId': categoryId == null ? '4' : categoryId,
+      'categorySubId': "",
+      'page': 1
+    };
+    await postRequest('getMallGoods', formData: data).then((value) {
+      var decode = json.decode(value.toString());
+      CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
+      Provide.value<CatogeryGoodsListProvide>(context)
+          .changeGoodsList(catogeryGoodsData.data);
     });
   }
 }
@@ -170,42 +187,29 @@ class CatogeryGoodsList extends StatefulWidget {
 }
 
 class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
-  List goods = [];
-
-  @override
-  void initState() {
-    _getCatogeryGoods();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Expanded(child: Container(
-      width: ScreenUtil.getInstance().setWidth(570.0),
-      child: getGoodsView(),
-    ));
+    return Provide<CatogeryGoodsListProvide>(
+      builder: (context, child, data) {
+        return Expanded(
+            child: Container(
+          width: ScreenUtil.getInstance().setWidth(570.0),
+          child: getGoodsView(data.goodsList),
+        ));
+      },
+    );
   }
 
-  void _getCatogeryGoods() async {
-    var data = {'categoryId': '4', 'categorySubId': "", 'page': 1};
-    await postRequest('getMallGoods', formData: data).then((value) {
-      var decode = json.decode(value.toString());
-      CatogeryGoodsData catogeryGoodsData = CatogeryGoodsData.fromJson(decode);
-      setState(() {
-        goods = catogeryGoodsData.data;
-      });
-    });
-  }
-
-  Widget getGoodsView() {
-    if (goods.length > 0) {
+  Widget getGoodsView(List<DataListBean> goodsList) {
+    if (goodsList.length > 0) {
       return GridView.builder(
-        gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
         scrollDirection: Axis.vertical,
-        itemCount: goods.length,
+        itemCount: goodsList.length,
         itemBuilder: (context, index) {
-          return getItem(goods[index]);
+          return getItem(goodsList[index]);
         },
       );
     } else {
