@@ -8,6 +8,7 @@ import '../provide/child_catogery.dart';
 import '../model/catogery_goods_data.dart';
 import '../provide/child_catogery_goodslist.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -221,6 +222,7 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
           noMoreText: '',
           loadReadyText: '松手加载更多',
           loadingText: '加载中...',
+          loadedText: '加载完成',
           infoText: '',
           infoColor: Colors.pink,
         ),
@@ -253,6 +255,14 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
               Provide.value<CatogeryGoodsListProvide>(context)
                   .changeGoodsListMore(catogeryGoodsData.data);
             } else {
+              Fluttertoast.showToast(
+                  msg: '没有更多数据了',
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  timeInSecForIos: 1,
+                  backgroundColor: Colors.pink,
+                  textColor: Colors.white,
+                  fontSize: 16.0);
               Provide.value<ChildCatogery>(context).changeNoMoreText('没有更多数据了');
             }
           });

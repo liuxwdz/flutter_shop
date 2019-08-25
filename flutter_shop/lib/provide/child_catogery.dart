@@ -18,7 +18,7 @@ class ChildCatogery with ChangeNotifier {
     BxMallSubDto all = BxMallSubDto();
     all.mallSubName = '全部';
     all.mallCategoryId = '00';
-    all.mallSubId = '00';
+    all.mallSubId = '';
     all.comments = '';
     childCatogeryList = [all];
     childCatogeryList.addAll(list);
