@@ -5,6 +5,8 @@ import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
+import '../router/application.dart';
+import '../router/routers.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -165,7 +167,10 @@ class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
 
   Widget _getHotItem(Map item) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Application.router.navigateTo(
+            context, Routers.detailPage + '?goodId=${item['goodsId']}');
+      },
       child: Container(
         alignment: Alignment.center,
         width: ScreenUtil.getInstance().setWidth(372),
