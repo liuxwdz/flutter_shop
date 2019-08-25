@@ -7,12 +7,14 @@ import 'provide/child_catogery_goodslist.dart';
 import 'package:fluro/fluro.dart';
 import 'router/application.dart';
 import 'router/routers.dart';
+import 'provide/detail.dart';
 
 void main() {
   final provide = Providers()
     ..provide(Provider.function((context) => Counter(0)))
     ..provide(Provider.function((context) => ChildCatogery()))
-    ..provide(Provider.function((context) => CatogeryGoodsListProvide()));
+    ..provide(Provider.function((context) => CatogeryGoodsListProvide()))
+    ..provide(Provider.function((context) => DetailGoodProvide()));
 
   runApp(ProviderNode(child: MyApp(), providers: provide));
 }

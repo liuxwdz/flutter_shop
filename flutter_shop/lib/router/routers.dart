@@ -10,7 +10,7 @@ class Routers {
     router.notFoundHandler = Handler(
         handlerFunc: (BuildContext context, Map<String, List<String>> params) {
       print('no handler found');
-      return null;
+      return Text('数据没找到');
     });
 
     router.define(detailPage, handler: detailHandler);
