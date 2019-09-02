@@ -4,6 +4,7 @@ import '../provide/detail.dart';
 import 'detailPages/detail_top_widget.dart';
 import 'detailPages/detail_explain.dart';
 import 'detailPages/detail_tabbar.dart';
+import 'detailPages/details_web.dart';
 
 class DetailGood extends StatelessWidget {
   final String goodId;
@@ -30,7 +31,8 @@ class DetailGood extends StatelessWidget {
                   children: <Widget>[
                     DetailTopWidget(),
                     DetailExplain(),
-                    DeatilTabbar()
+                    DeatilTabbar(),
+                    DetailsWeb()
                   ],
                 ),
               );

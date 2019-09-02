@@ -5,10 +5,16 @@ import 'dart:convert';
 
 class DetailGoodProvide with ChangeNotifier {
   GoodsDetail goodsDetail;
+  bool isLeft = true;
 
-  void getDetailById(String goodId) {
+  void leftToggle() {
+    isLeft = !isLeft;
+    notifyListeners();
+  }
+
+  void getDetailById(String goodId) async {
     var data = {'goodId': goodId};
-    postRequest('getGoodDetailById', formData: data).then((value) {
+    await postRequest('getGoodDetailById', formData: data).then((value) {
       var decode = json.decode(value.toString());
       goodsDetail = GoodsDetail.fromJson(decode);
       notifyListeners();

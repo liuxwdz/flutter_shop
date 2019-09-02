@@ -1,54 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import '../../provide/detail.dart';
 
-class DeatilTabbar extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _DeatilTabbarState();
-}
-
-class _DeatilTabbarState extends State<DeatilTabbar>
-    with SingleTickerProviderStateMixin {
-  List<Tab> tabs = [
-    Tab(
-      text: '详情',
-    ),
-    Tab(
-      text: '评论',
-    )
-  ];
-
-  TabController tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: tabs.length, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
-
+class DeatilTabbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: 10.0),
-      color: Colors.white,
-      width: ScreenUtil.getInstance().setWidth(750.0),
-      height: ScreenUtil.getInstance().setHeight(250.0),
-      child: Scaffold(
-        appBar: TabBar(
-          tabs: tabs,
-          controller: tabController,
-          indicatorColor: Colors.pink,
-          labelColor: Colors.pink,
-          unselectedLabelColor: Colors.black,
-        ),
-        body: TabBarView(
-          children: [Text('1'), Text('2')],
-          controller: tabController,
+    return Provide<DetailGoodProvide>(
+      builder: (context, child, value) {
+        bool isLeft = value.isLeft;
+        return Row(
+          children: <Widget>[
+            _getTabItem(context, isLeft, '详情', true),
+            _getTabItem(context, !isLeft, '评论', false)
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _getTabItem(
+      BuildContext context, bool isSelected, String tabTitle, bool isLeft) {
+    return InkWell(
+      onTap: () {
+        var value = Provide.value<DetailGoodProvide>(context);
+        if (isLeft) {
+          if (!value.isLeft) {
+            value.leftToggle();
+          }
+        } else {
+          if (value.isLeft) {
+            value.leftToggle();
+          }
+        }
+      },
+      child: Container(
+        width: ScreenUtil.getInstance().setWidth(375.0),
+        padding: EdgeInsets.all(10.0),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    color: isSelected ? Colors.pink : Colors.white,
+                    width: 1.0))),
+        child: Text(
+          tabTitle,
+          style: TextStyle(color: isSelected ? Colors.pink : Colors.black),
         ),
       ),
     );
