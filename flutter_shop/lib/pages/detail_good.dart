@@ -3,6 +3,7 @@ import 'package:provide/provide.dart';
 import '../provide/detail.dart';
 import 'detailPages/detail_top_widget.dart';
 import 'detailPages/detail_explain.dart';
+import 'detailPages/detail_tabbar.dart';
 
 class DetailGood extends StatelessWidget {
   final String goodId;
@@ -25,8 +26,12 @@ class DetailGood extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Container(
-                child: Column(
-                  children: <Widget>[DetailTopWidget(), DetailExplain()],
+                child: ListView(
+                  children: <Widget>[
+                    DetailTopWidget(),
+                    DetailExplain(),
+                    DeatilTabbar()
+                  ],
                 ),
               );
             } else {
