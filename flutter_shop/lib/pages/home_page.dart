@@ -224,9 +224,9 @@ class TopSwiper extends StatelessWidget {
         itemBuilder: (BuildContext context, int index) {
           return InkWell(
             onTap: () {
+              var item = swiperDataList[index];
               Application.router.navigateTo(
-                  context, Routers.detailPage +
-                  '?goodId=${swiperDataList[index]['goodsId']}');
+                  context, Routers.detailPage + '?goodId=${item['goodsId']}');
             },
             child: Image.network(
               swiperDataList[index]['image'],

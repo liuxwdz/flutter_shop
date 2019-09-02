@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import '../provide/detail.dart';
+import 'detailPages/detail_top_widget.dart';
 
 class DetailGood extends StatelessWidget {
   final String goodId;
@@ -23,7 +24,7 @@ class DetailGood extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return Container(
-                child: Text(snapshot.data.toString()),
+                child: DetailTopWidget(),
               );
             } else {
               return Text('加载中...');
