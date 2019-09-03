@@ -5,6 +5,7 @@ import 'detailPages/detail_top_widget.dart';
 import 'detailPages/detail_explain.dart';
 import 'detailPages/detail_tabbar.dart';
 import 'detailPages/details_web.dart';
+import 'detailPages/detail_bottom.dart';
 
 class DetailGood extends StatelessWidget {
   final String goodId;
@@ -26,15 +27,24 @@ class DetailGood extends StatelessWidget {
           future: getDetail(context),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Container(
-                child: ListView(
-                  children: <Widget>[
-                    DetailTopWidget(),
-                    DetailExplain(),
-                    DeatilTabbar(),
-                    DetailsWeb()
-                  ],
-                ),
+              return Stack(
+                children: <Widget>[
+                  Container(
+                    child: ListView(
+                      children: <Widget>[
+                        DetailTopWidget(),
+                        DetailExplain(),
+                        DeatilTabbar(),
+                        DetailsWeb()
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    child: DeatilBottom(),
+                    bottom: 0,
+                    left: 0,
+                  )
+                ],
               );
             } else {
               return Text('加载中...');

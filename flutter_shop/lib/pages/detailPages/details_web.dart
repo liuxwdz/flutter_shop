@@ -15,6 +15,7 @@ class DetailsWeb extends StatelessWidget {
         if (isLeft) {
           String detail = value.goodsDetail.data.goodInfo.goodsDetail;
           return Container(
+            padding: EdgeInsets.only(bottom: 100.0),
             child: Html(data: detail),
           );
         } else {
@@ -35,6 +36,7 @@ class DetailsWeb extends StatelessWidget {
     if (goodComments != null && goodComments.length > 0) {
       List<Widget> getCommentList = _getCommentList(goodComments);
       getCommentList.add(Container(
+        padding: EdgeInsets.only(bottom: 100.0),
         child: Image.network(picturepictureaddress),
       ));
       return Container(
@@ -57,7 +59,9 @@ class DetailsWeb extends StatelessWidget {
               height: ScreenUtil.getInstance().setHeight(20.0),
             ),
             Image.network(picturepictureaddress),
-
+            SizedBox(
+              height: ScreenUtil.getInstance().setHeight(100.0),
+            ),
           ],
         ),
       );

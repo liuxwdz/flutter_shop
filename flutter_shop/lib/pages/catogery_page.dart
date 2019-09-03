@@ -9,6 +9,8 @@ import '../model/catogery_goods_data.dart';
 import '../provide/child_catogery_goodslist.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../router/application.dart';
+import '../router/routers.dart';
 
 class CatogeryPage extends StatefulWidget {
   @override
@@ -275,7 +277,10 @@ class _CatogeryGoodsListState extends State<CatogeryGoodsList> {
 
   Widget getItem(DataListBean dataListBean) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Application.router.navigateTo(
+            context, Routers.detailPage + '?goodId=${dataListBean.goodsId}');
+      },
       child: Container(
         color: Colors.white,
         padding: EdgeInsets.all(5.0),
