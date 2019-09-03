@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import '../../provide/cart.dart';
+import '../../provide/detail.dart';
 
 class DeatilBottom extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    var goodInfo =
+        Provide.value<DetailGoodProvide>(context).goodsDetail.data.goodInfo;
     return Container(
       width: ScreenUtil.getInstance().setWidth(750.0),
       height: ScreenUtil.getInstance().setHeight(100.0),
@@ -23,7 +28,14 @@ class DeatilBottom extends StatelessWidget {
                 ),
               )),
           InkWell(
-              onTap: () {},
+              onTap: () {
+                Provide.value<CartProvide>(context).save(
+                    goodInfo.goodsId,
+                    goodInfo.goodsName,
+                    goodInfo.presentPrice,
+                    1,
+                    goodInfo.image1);
+              },
               child: Container(
                 alignment: Alignment.center,
                 width: ScreenUtil.getInstance().setWidth(320.0),
