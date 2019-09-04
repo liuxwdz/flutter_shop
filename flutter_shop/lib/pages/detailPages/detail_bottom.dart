@@ -35,7 +35,8 @@ class DeatilBottom extends StatelessWidget {
                     goodInfo.oriPrice,
                     goodInfo.presentPrice,
                     1,
-                    goodInfo.image1);
+                    goodInfo.image1,
+                    true);
               },
               child: Container(
                 alignment: Alignment.center,

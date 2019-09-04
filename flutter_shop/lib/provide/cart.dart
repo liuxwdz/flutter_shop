@@ -6,8 +6,8 @@ import '../model/cart_info.dart';
 class CartProvide with ChangeNotifier {
   List<CartInfo> cartInfos = [];
 
-  save(String goodsId, String goodsName, double price, double prePrice, int count,
-      String img) async {
+  save(String goodsId, String goodsName, double price, double prePrice,
+      int count, String img, bool isChecked) async {
     List<Map> temp = [];
     cartInfos.clear();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -31,6 +31,7 @@ class CartProvide with ChangeNotifier {
         'goodsName': goodsName,
         'price': price,
         'prePrice': prePrice,
+        'isChecked': isChecked,
         'count': count,
         'img': img,
       };
@@ -63,6 +64,28 @@ class CartProvide with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.remove('cartGoods');
     cartInfos.clear();
+    notifyListeners();
+  }
+
+  delGoodsById(String goodsId) async {
+    int index = -1;
+    int tempIndex = 0;
+    cartInfos.forEach((item) {
+      if (item.goodsId == goodsId) {
+        index = tempIndex;
+      }
+      tempIndex++;
+    });
+
+    if (index >= 0) {
+      cartInfos.removeAt(index);
+    }
+
+    String cartData = json.encode(cartInfos).toString();
+    print(cartData);
+    print(cartInfos);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('cartGoods', cartData);
     notifyListeners();
   }
 }

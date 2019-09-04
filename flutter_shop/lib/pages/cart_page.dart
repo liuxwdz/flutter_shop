@@ -17,21 +17,29 @@ class CartPage extends StatelessWidget {
             List cartInfos = Provide.value<CartProvide>(context).cartInfos;
             print('购物车商品数量：${cartInfos.length}');
             if (snapshot.hasData && cartInfos.length > 0) {
-              return Stack(
-                children: <Widget>[
-                  ListView.builder(
-                    itemBuilder: (context, index) {
-                      return CartItem(cartInfos[index]);
-                    },
-                    itemCount: cartInfos.length,
-                  ),
-                  Positioned(
-                    child: CartBottom(),
-                    bottom: 0,
-                    left: 0,
-                  )
-                ],
-              );
+              return Provide<CartProvide>(builder: (context, child, values) {
+                if (values.cartInfos.length > 0) {
+                  return Stack(
+                    children: <Widget>[
+                      ListView.builder(
+                        itemBuilder: (context, index) {
+                          return CartItem(values.cartInfos[index]);
+                        },
+                        itemCount: values.cartInfos.length,
+                      ),
+                      Positioned(
+                        child: CartBottom(),
+                        bottom: 0,
+                        left: 0,
+                      )
+                    ],
+                  );
+                } else {
+                  return Center(
+                    child: Text('没有数据'),
+                  );
+                }
+              });
             } else {
               return Center(
                 child: Text('没有数据'),

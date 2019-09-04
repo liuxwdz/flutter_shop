@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../model/cart_info.dart';
 import 'cart_counter.dart';
+import 'package:provide/provide.dart';
+import '../../provide/cart.dart';
 
 class CartItem extends StatelessWidget {
   final CartInfo item;
@@ -24,7 +26,7 @@ class CartItem extends StatelessWidget {
           _getCheckBox(),
           _getGoodsImg(),
           _getNameWidget(),
-          _getRightWidget()
+          _getRightWidget(context)
         ],
       ),
     );
@@ -33,7 +35,7 @@ class CartItem extends StatelessWidget {
   Widget _getCheckBox() {
     return Container(
       child: Checkbox(
-        value: true,
+        value: item.isChecked,
         onChanged: (bool isChecked) {},
         activeColor: Colors.pink,
         checkColor: Colors.grey,
@@ -69,7 +71,7 @@ class CartItem extends StatelessWidget {
     );
   }
 
-  Widget _getRightWidget() {
+  Widget _getRightWidget(context) {
     return Container(
       alignment: Alignment.topRight,
       width: ScreenUtil.getInstance().setWidth(150.0),
@@ -93,7 +95,9 @@ class CartItem extends StatelessWidget {
                 size: 30.0,
                 color: Colors.black12,
               ),
-              onPressed: () {})
+              onPressed: () {
+                Provide.value<CartProvide>(context).delGoodsById(item.goodsId);
+              })
         ],
       ),
     );
