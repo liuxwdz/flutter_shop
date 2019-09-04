@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../model/cart_info.dart';
+import 'cart_counter.dart';
 
 class CartItem extends StatelessWidget {
   final CartInfo item;
@@ -62,7 +63,7 @@ class CartItem extends StatelessWidget {
           SizedBox(
             height: ScreenUtil.getInstance().setHeight(10.0),
           ),
-          Text('商品数量:${item.count}')
+          CartCounter(item.count)
         ],
       ),
     );
