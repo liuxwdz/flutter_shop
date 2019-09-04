@@ -6,10 +6,15 @@ import '../model/cart_info.dart';
 class CartProvide with ChangeNotifier {
   List<CartInfo> cartInfos = [];
 
+  int allCount = 0;
+  double allPrice = 0.0;
+
   save(String goodsId, String goodsName, double price, double prePrice,
       int count, String img, bool isChecked) async {
     List<Map> temp = [];
     cartInfos.clear();
+    allCount = 0;
+    allPrice = 0.0;
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var string = sharedPreferences.getString('cartGoods');
     bool contain = false;
@@ -21,6 +26,8 @@ class CartProvide with ChangeNotifier {
           item['count'] = item['count'] + 1;
           contain = true;
         }
+        allCount += item['count'];
+        allPrice += item['count'] * item['prePrice'];
         cartInfos.add(CartInfo.fromJson(item));
       });
     }
@@ -37,6 +44,8 @@ class CartProvide with ChangeNotifier {
       };
       temp.add(value);
       cartInfos.add(CartInfo.fromJson(value));
+      allCount += count;
+      allPrice += count * prePrice;
     }
 
     String cartData = json.encode(temp).toString();
@@ -50,11 +59,15 @@ class CartProvide with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var string = sharedPreferences.getString('cartGoods');
     cartInfos.clear();
+    allCount = 0;
+    allPrice = 0.0;
     if (string != null) {
       var decode = json.decode(string);
       List<Map> temp = (decode as List).cast();
       temp.forEach((item) {
         cartInfos.add(CartInfo.fromJson(item));
+        allCount += item['count'];
+        allPrice += item['count'] * item['prePrice'];
       });
     }
     notifyListeners();
@@ -63,6 +76,8 @@ class CartProvide with ChangeNotifier {
   cleanCart() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.remove('cartGoods');
+    allCount = 0;
+    allPrice = 0.0;
     cartInfos.clear();
     notifyListeners();
   }
@@ -73,6 +88,8 @@ class CartProvide with ChangeNotifier {
     cartInfos.forEach((item) {
       if (item.goodsId == goodsId) {
         index = tempIndex;
+        allCount -= item.count;
+        allPrice -= item.count * item.prePrice;
       }
       tempIndex++;
     });

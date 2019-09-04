@@ -37,7 +37,7 @@ class CartItem extends StatelessWidget {
       child: Checkbox(
         value: item.isChecked,
         onChanged: (bool isChecked) {},
-        activeColor: Colors.pink,
+        activeColor: Colors.red,
         checkColor: Colors.grey,
       ),
     );
