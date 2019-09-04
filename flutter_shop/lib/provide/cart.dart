@@ -47,9 +47,8 @@ class CartProvide with ChangeNotifier {
   getCartInfo() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var string = sharedPreferences.getString('cartGoods');
-    if (string == null) {
-      cartInfos.clear();
-    } else {
+    cartInfos.clear();
+    if (string != null) {
       var decode = json.decode(string);
       List<Map> temp = (decode as List).cast();
       temp.forEach((item) {
