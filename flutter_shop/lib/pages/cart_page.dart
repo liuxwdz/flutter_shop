@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provide/provide.dart';
 import '../provide/cart.dart';
+import 'cartPage/cart_item.dart';
 
 class CartPage extends StatelessWidget {
   @override
@@ -17,9 +18,7 @@ class CartPage extends StatelessWidget {
             if (snapshot.hasData && cartInfos.length > 0) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(cartInfos[index].goodsName),
-                  );
+                  return CartItem(cartInfos[index]);
                 },
                 itemCount: cartInfos.length,
               );

@@ -6,7 +6,7 @@ import '../model/cart_info.dart';
 class CartProvide with ChangeNotifier {
   List<CartInfo> cartInfos = [];
 
-  save(String goodsId, String goodsName, double price, int count,
+  save(String goodsId, String goodsName, double price, double prePrice, int count,
       String img) async {
     List<Map> temp = [];
     cartInfos.clear();
@@ -30,6 +30,7 @@ class CartProvide with ChangeNotifier {
         'goodsId': goodsId,
         'goodsName': goodsName,
         'price': price,
+        'prePrice': prePrice,
         'count': count,
         'img': img,
       };

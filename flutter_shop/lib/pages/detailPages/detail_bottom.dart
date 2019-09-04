@@ -32,6 +32,7 @@ class DeatilBottom extends StatelessWidget {
                 Provide.value<CartProvide>(context).save(
                     goodInfo.goodsId,
                     goodInfo.goodsName,
+                    goodInfo.oriPrice,
                     goodInfo.presentPrice,
                     1,
                     goodInfo.image1);
@@ -49,7 +50,9 @@ class DeatilBottom extends StatelessWidget {
                 ),
               )),
           InkWell(
-              onTap: () {},
+              onTap: () {
+                Provide.value<CartProvide>(context).cleanCart();
+              },
               child: Container(
                 alignment: Alignment.center,
                 width: ScreenUtil.getInstance().setWidth(320.0),
