@@ -14,7 +14,7 @@ class CartBottom extends StatelessWidget {
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            _getSelAllCheckbtn(),
+            _getSelAllCheckbtn(context),
             _getMidAreaWidget(value.allPrice),
             _getRightBtn(value.allCount)
           ],
@@ -23,15 +23,21 @@ class CartBottom extends StatelessWidget {
     );
   }
 
-  Widget _getSelAllCheckbtn() {
+  Widget _getSelAllCheckbtn(context) {
     return Container(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Checkbox(
-            value: true,
-            onChanged: (bool value) {},
-            activeColor: Colors.red,
+          Provide<CartProvide>(
+            builder: (context, child, values) {
+              return Checkbox(
+                value: values.isAllSelected,
+                onChanged: (bool value) {
+                  Provide.value<CartProvide>(context).changeAllSelected(value);
+                },
+                activeColor: Colors.red,
+              );
+            },
           ),
           Text(
             '全选',

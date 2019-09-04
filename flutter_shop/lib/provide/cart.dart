@@ -8,6 +8,7 @@ class CartProvide with ChangeNotifier {
 
   int allCount = 0;
   double allPrice = 0.0;
+  bool isAllSelected = false;
 
   save(String goodsId, String goodsName, double price, double prePrice,
       int count, String img, bool isChecked) async {
@@ -18,16 +19,21 @@ class CartProvide with ChangeNotifier {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     var string = sharedPreferences.getString('cartGoods');
     bool contain = false;
+    bool hasNoChecked = false;
     if (string != null) {
       var decode = json.decode(string);
       temp = (decode as List).cast();
       temp.forEach((item) {
         if (item['goodsId'] == goodsId) {
-          item['count'] = item['count'] + 1;
+          item['count'] = item['count'] + count;
           contain = true;
         }
-        allCount += item['count'];
-        allPrice += item['count'] * item['prePrice'];
+        if (item['isChecked']) {
+          allCount += item['count'];
+          allPrice += item['count'] * item['prePrice'];
+        } else {
+          hasNoChecked = true;
+        }
         cartInfos.add(CartInfo.fromJson(item));
       });
     }
@@ -44,10 +50,15 @@ class CartProvide with ChangeNotifier {
       };
       temp.add(value);
       cartInfos.add(CartInfo.fromJson(value));
-      allCount += count;
-      allPrice += count * prePrice;
+      if (isChecked) {
+        allCount += count;
+        allPrice += count * prePrice;
+      } else {
+        hasNoChecked = true;
+      }
     }
 
+    isAllSelected = !hasNoChecked;
     String cartData = json.encode(temp).toString();
     print(cartData);
     print(cartInfos);
@@ -61,15 +72,21 @@ class CartProvide with ChangeNotifier {
     cartInfos.clear();
     allCount = 0;
     allPrice = 0.0;
+    bool hasNoChecked = false;
     if (string != null) {
       var decode = json.decode(string);
       List<Map> temp = (decode as List).cast();
       temp.forEach((item) {
         cartInfos.add(CartInfo.fromJson(item));
-        allCount += item['count'];
-        allPrice += item['count'] * item['prePrice'];
+        if (item['isChecked']) {
+          allCount += item['count'];
+          allPrice += item['count'] * item['prePrice'];
+        } else {
+          hasNoChecked = true;
+        }
       });
     }
+    isAllSelected = !hasNoChecked;
     notifyListeners();
   }
 
@@ -79,28 +96,68 @@ class CartProvide with ChangeNotifier {
     allCount = 0;
     allPrice = 0.0;
     cartInfos.clear();
+    isAllSelected = false;
     notifyListeners();
   }
 
   delGoodsById(String goodsId) async {
     int index = -1;
     int tempIndex = 0;
+    bool hasNoChecked = false;
     cartInfos.forEach((item) {
       if (item.goodsId == goodsId) {
         index = tempIndex;
         allCount -= item.count;
         allPrice -= item.count * item.prePrice;
+      } else {
+        if (!item.isChecked) {
+          hasNoChecked = true;
+        }
       }
       tempIndex++;
     });
 
     if (index >= 0) {
       cartInfos.removeAt(index);
+      isAllSelected = !hasNoChecked;
     }
-
     String cartData = json.encode(cartInfos).toString();
-    print(cartData);
-    print(cartInfos);
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('cartGoods', cartData);
+    notifyListeners();
+  }
+
+  changeItemChecked(CartInfo) async {
+    bool hasNochecked = false;
+    cartInfos.forEach((item) {
+      if (item.goodsId == CartInfo.goodsId) {
+        if (item.isChecked) {
+          allCount -= item.count;
+          allPrice -= item.count * item.prePrice;
+          item.isChecked = false;
+        } else {
+          allCount += item.count;
+          allPrice += item.count * item.prePrice;
+          item.isChecked = true;
+        }
+      }
+      if (!item.isChecked) {
+        hasNochecked = true;
+      }
+    });
+    isAllSelected = !hasNochecked;
+    String cartData = json.encode(cartInfos).toString();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('cartGoods', cartData);
+    notifyListeners();
+  }
+
+  changeAllSelected(bool selected) async {
+    cartInfos.forEach((item) {
+      item.isChecked = selected;
+    });
+    isAllSelected = selected;
+    String cartData = json.encode(cartInfos).toString();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('cartGoods', cartData);
     notifyListeners();

@@ -23,7 +23,7 @@ class CartItem extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _getCheckBox(),
+          _getCheckBox(context),
           _getGoodsImg(),
           _getNameWidget(),
           _getRightWidget(context)
@@ -32,11 +32,13 @@ class CartItem extends StatelessWidget {
     );
   }
 
-  Widget _getCheckBox() {
+  Widget _getCheckBox(context) {
     return Container(
       child: Checkbox(
         value: item.isChecked,
-        onChanged: (bool isChecked) {},
+        onChanged: (bool isChecked) {
+          Provide.value<CartProvide>(context).changeItemChecked(item);
+        },
         activeColor: Colors.red,
         checkColor: Colors.grey,
       ),
