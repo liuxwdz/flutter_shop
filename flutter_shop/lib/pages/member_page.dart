@@ -13,6 +13,8 @@ class MemberPage extends StatelessWidget {
           _getTopHead(),
           _getMyOrder(),
           _getOrderList(),
+          _getGroup1(),
+          _getGroup2()
         ],
       ),
     );
@@ -105,5 +107,53 @@ class MemberPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _getGroup1() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: ScreenUtil.getInstance().setHeight(15.0),
+        ),
+        _getOtherItem('领取优惠券', Icons.mode_comment),
+        _getOtherItem('已领取优惠券', Icons.mode_comment),
+        _getOtherItem('地址管理', Icons.location_on),
+      ],
+    );
+  }
+
+  Widget _getGroup2() {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: ScreenUtil.getInstance().setHeight(15.0),
+        ),
+        _getOtherItem('客服电话', Icons.perm_phone_msg),
+        _getOtherItem('关于商城', Icons.error),
+      ],
+    );
+  }
+
+  Widget _getOtherItem(String name, IconData iconData) {
+    return Container(
+        width: ScreenUtil.getInstance().setWidth(750.0),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            border:
+                Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
+        child: ListTile(
+          leading: Icon(
+            iconData,
+            size: 25.0,
+          ),
+          title: Text(
+            name,
+            style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(28.0)),
+          ),
+          trailing: Icon(
+            Icons.keyboard_arrow_right,
+            size: 30.0,
+          ),
+        ));
   }
 }
