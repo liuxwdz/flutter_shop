@@ -154,8 +154,14 @@ class CartProvide with ChangeNotifier {
   }
 
   changeAllSelected(bool selected) async {
+    allCount = 0;
+    allPrice = 0.0;
     cartInfos.forEach((item) {
       item.isChecked = selected;
+      if (selected) {
+        allCount += item.count;
+        allPrice += item.count * item.prePrice;
+      }
     });
     isAllSelected = selected;
     String cartData = json.encode(cartInfos).toString();

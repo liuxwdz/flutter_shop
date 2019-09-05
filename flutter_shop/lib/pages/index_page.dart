@@ -4,13 +4,10 @@ import 'catogery_page.dart';
 import 'cart_page.dart';
 import 'member_page.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provide/provide.dart';
+import '../provide/current_page.dart';
 
-class IndexPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => IndexPageState();
-}
-
-class IndexPageState extends State<IndexPage> {
+class IndexPage extends StatelessWidget {
   final List<BottomNavigationBarItem> bottomItems = [
     BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("首页")),
     BottomNavigationBarItem(icon: Icon(Icons.category), title: Text("分类")),
@@ -26,13 +23,6 @@ class IndexPageState extends State<IndexPage> {
     MemberPage()
   ];
 
-  int currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.instance = ScreenUtil(height: 1334, width: 750)..init(context);
@@ -40,21 +30,23 @@ class IndexPageState extends State<IndexPage> {
     print('Device height:${ScreenUtil.screenHeight}'); //Device height
     print(
         'Device pixel density:${ScreenUtil.pixelRatio}'); //Device pixel density
-    return Scaffold(
-      body: IndexedStack(
-        index: currentIndex,
-        children: pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: bottomItems,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: (index) {
-          setState(() {
-            currentIndex = index;
-          });
-        },
-      ),
+    return Provide<CurrentPage>(
+      builder: (context, child, values) {
+        return Scaffold(
+          body: IndexedStack(
+            index: values.currentIndex,
+            children: pages,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: bottomItems,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: values.currentIndex,
+            onTap: (index) {
+              Provide.value<CurrentPage>(context).changePages(index);
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'pages/index_page.dart';
-import 'provide/counter.dart';
 import 'package:provide/provide.dart';
 import 'provide/child_catogery.dart';
 import 'provide/child_catogery_goodslist.dart';
@@ -9,13 +8,14 @@ import 'router/application.dart';
 import 'router/routers.dart';
 import 'provide/detail.dart';
 import 'provide/cart.dart';
+import 'provide/current_page.dart';
 
 void main() {
   final provide = Providers()
-    ..provide(Provider.function((context) => Counter(0)))
     ..provide(Provider.function((context) => ChildCatogery()))
     ..provide(Provider.function((context) => CatogeryGoodsListProvide()))
     ..provide(Provider.function((context) => CartProvide()))
+    ..provide(Provider.function((context) => CurrentPage()))
     ..provide(Provider.function((context) => DetailGoodProvide()));
 
   runApp(ProviderNode(child: MyApp(), providers: provide));

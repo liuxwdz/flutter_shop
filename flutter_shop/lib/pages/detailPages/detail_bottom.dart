@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
 import '../../provide/cart.dart';
 import '../../provide/detail.dart';
+import '../../provide/current_page.dart';
 
 class DeatilBottom extends StatelessWidget {
   @override
@@ -15,7 +16,10 @@ class DeatilBottom extends StatelessWidget {
       child: Row(
         children: <Widget>[
           InkWell(
-              onTap: () {},
+              onTap: () {
+                Provide.value<CurrentPage>(context).changePages(2);
+                Navigator.pop(context);
+              },
               child: Container(
                 color: Colors.white,
                 alignment: Alignment.center,
