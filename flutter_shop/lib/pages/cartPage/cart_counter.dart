@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../model/cart_info.dart';
+import 'package:provide/provide.dart';
+import '../../provide/cart.dart';
 
 class CartCounter extends StatelessWidget {
-  int count = 0;
+  CartInfo info;
 
-  CartCounter(this.count);
+  CartCounter(this.info);
 
   @override
   Widget build(BuildContext context) {
@@ -14,19 +17,19 @@ class CartCounter extends StatelessWidget {
           BoxDecoration(border: Border.all(width: 0.5, color: Colors.black12)),
       child: Row(
         children: <Widget>[
-          _getReduceBtn(),
+          _getReduceBtn(context),
           Expanded(
               child: Container(
             alignment: Alignment.center,
-            child: Text('${count}'),
+            child: Text('${info.count}'),
           )),
-          _getAddBtn()
+          _getAddBtn(context)
         ],
       ),
     );
   }
 
-  Widget _getReduceBtn() {
+  Widget _getReduceBtn(context) {
     return Container(
       width: ScreenUtil.getInstance().setWidth(45.0),
       height: ScreenUtil.getInstance().setHeight(45.0),
@@ -34,7 +37,9 @@ class CartCounter extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(right: BorderSide(width: 0.5, color: Colors.black12))),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Provide.value<CartProvide>(context).addOrReduceCount(info, 'reduce');
+        },
         child: Container(
           child: Text('-'),
         ),
@@ -42,7 +47,7 @@ class CartCounter extends StatelessWidget {
     );
   }
 
-  Widget _getAddBtn() {
+  Widget _getAddBtn(context) {
     return Container(
       width: ScreenUtil.getInstance().setWidth(45.0),
       height: ScreenUtil.getInstance().setHeight(45.0),
@@ -50,7 +55,9 @@ class CartCounter extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(left: BorderSide(width: 0.5, color: Colors.black12))),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          Provide.value<CartProvide>(context).addOrReduceCount(info, 'add');
+        },
         child: Container(
           child: Text('+'),
         ),

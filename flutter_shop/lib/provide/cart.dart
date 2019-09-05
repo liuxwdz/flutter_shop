@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/cart_info.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CartProvide with ChangeNotifier {
   List<CartInfo> cartInfos = [];
@@ -157,6 +158,39 @@ class CartProvide with ChangeNotifier {
       item.isChecked = selected;
     });
     isAllSelected = selected;
+    String cartData = json.encode(cartInfos).toString();
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('cartGoods', cartData);
+    notifyListeners();
+  }
+
+  addOrReduceCount(CartInfo cartInfo, String type) async {
+    cartInfos.forEach((item) {
+      if (item.goodsId == cartInfo.goodsId) {
+        if ('add' == type) {
+          if (item.isChecked) {
+            allCount += 1;
+            allPrice += 1 * item.prePrice;
+          }
+          item.count++;
+        } else if (item.count > 1) {
+          if (item.isChecked) {
+            allCount -= 1;
+            allPrice -= 1 * item.prePrice;
+          }
+          item.count--;
+        } else {
+          Fluttertoast.showToast(
+              msg: '不能再少了哦',
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIos: 1,
+              backgroundColor: Colors.pink,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    });
     String cartData = json.encode(cartInfos).toString();
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('cartGoods', cartData);

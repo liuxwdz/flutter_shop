@@ -40,7 +40,6 @@ class CartItem extends StatelessWidget {
           Provide.value<CartProvide>(context).changeItemChecked(item);
         },
         activeColor: Colors.red,
-        checkColor: Colors.grey,
       ),
     );
   }
@@ -67,7 +66,7 @@ class CartItem extends StatelessWidget {
           SizedBox(
             height: ScreenUtil.getInstance().setHeight(10.0),
           ),
-          CartCounter(item.count)
+          CartCounter(item)
         ],
       ),
     );
