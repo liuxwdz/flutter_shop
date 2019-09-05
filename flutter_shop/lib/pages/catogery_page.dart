@@ -11,13 +11,9 @@ import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../router/application.dart';
 import '../router/routers.dart';
+import '../provide/catogery_index.dart';
 
-class CatogeryPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _CatogeryPageState();
-}
-
-class _CatogeryPageState extends State<CatogeryPage> {
+class CatogeryPage extends StatelessWidget {
   String catogeryData = '暂无数据';
 
   @override
@@ -51,12 +47,11 @@ class LeftCatogeryNav extends StatefulWidget {
 
 class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
   List catogeryList = [];
-  int currentIndex = 0;
+  int lastItem = 0;
 
   @override
   void initState() {
     _getCatogery();
-    _getCatogeryGoods(context);
     super.initState();
   }
 
@@ -68,44 +63,46 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
       width: ScreenUtil.getInstance().setWidth(180),
       child: ListView.builder(
         itemBuilder: (BuildContext context, int index) {
-          return _getItemWidget(index);
+          return _getItemWidget(context, index);
         },
         itemCount: catogeryList.length,
       ),
     );
   }
 
-  Widget _getItemWidget(int index) {
-    return Container(
-      padding: EdgeInsets.only(left: 10.0),
-      height: ScreenUtil.getInstance().setHeight(100),
-      decoration: BoxDecoration(
-          color: (index == currentIndex)
-              ? Color.fromARGB(255, 239, 239, 239)
-              : Colors.white,
-          border:
-              Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            currentIndex = index;
-          });
-          List childCatogery = catogeryList[index].bxMallSubDto;
-          Provide.value<ChildCatogery>(context).changeChildCatogeryList(
-              childCatogery, catogeryList[index].mallCategoryId);
-          _getCatogeryGoods(context,
-              categoryId: catogeryList[index].mallCategoryId);
-        },
-        child: Container(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            catogeryList[index].mallCategoryName,
-            style: TextStyle(
-              fontSize: ScreenUtil.getInstance().setSp(26),
+  Widget _getItemWidget(context, int index) {
+    return Provide<CatogeryMan>(
+      builder: (context, child, value) {
+        return Container(
+          padding: EdgeInsets.only(left: 10.0),
+          height: ScreenUtil.getInstance().setHeight(100),
+          decoration: BoxDecoration(
+              color: (index == value.currentIndex)
+                  ? Color.fromARGB(255, 239, 239, 239)
+                  : Colors.white,
+              border: Border(
+                  bottom: BorderSide(width: 0.5, color: Colors.black12))),
+          child: InkWell(
+            onTap: () {
+              Provide.value<CatogeryMan>(context).changeCurreneIndex(index);
+              List childCatogery = catogeryList[index].bxMallSubDto;
+              Provide.value<ChildCatogery>(context).changeChildCatogeryList(
+                  childCatogery, catogeryList[index].mallCategoryId);
+              _getCatogeryGoods(context,
+                  categoryId: catogeryList[index].mallCategoryId);
+            },
+            child: Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                catogeryList[index].mallCategoryName,
+                style: TextStyle(
+                  fontSize: ScreenUtil.getInstance().setSp(26),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -117,9 +114,10 @@ class _LeftCatogeryNavState extends State<LeftCatogeryNav> {
           CatogeryData catogeryData = CatogeryData.fromJson(jsonData);
           catogeryList = catogeryData.data;
           List childCatogery = catogeryList[0].bxMallSubDto;
-          currentIndex = 0;
           Provide.value<ChildCatogery>(context).changeChildCatogeryList(
               childCatogery, catogeryList[0].mallCategoryId);
+          _getCatogeryGoods(context,
+              categoryId: catogeryList[0].mallCategoryId);
         });
       }
     });

@@ -7,6 +7,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import '../router/application.dart';
 import '../router/routers.dart';
+import '../provide/current_page.dart';
+import 'package:provide/provide.dart';
+import '../provide/catogery_index.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -251,6 +254,7 @@ class TopNavgator extends StatelessWidget {
     if (this.navgatorDataList.length > 10) {
       this.navgatorDataList.removeRange(10, this.navgatorDataList.length);
     }
+    int index = 0;
     return Container(
       color: Colors.white,
       height: ScreenUtil().setHeight(340),
@@ -260,16 +264,17 @@ class TopNavgator extends StatelessWidget {
         crossAxisCount: 5,
         padding: EdgeInsets.all(5.0),
         children: navgatorDataList.map((item) {
-          return _getGridViewItem(context, item);
+          return _getGridViewItem(context, item, index++);
         }).toList(),
       ),
     );
   }
 
-  Widget _getGridViewItem(BuildContext context, item) {
+  Widget _getGridViewItem(BuildContext context, item, index) {
     return InkWell(
       onTap: () {
-        print('点击了当前条目${item['mallCategoryName']}');
+        Provide.value<CurrentPage>(context).changePages(1);
+        Provide.value<CatogeryMan>(context).changeCurreneIndex(index);
       },
       child: Column(
         children: <Widget>[
