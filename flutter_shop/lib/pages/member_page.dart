@@ -11,6 +11,8 @@ class MemberPage extends StatelessWidget {
       body: ListView(
         children: <Widget>[
           _getTopHead(),
+          _getMyOrder(),
+          _getOrderList(),
         ],
       ),
     );
@@ -40,6 +42,65 @@ class MemberPage extends StatelessWidget {
               '用户昵称',
               style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(36.0)),
             ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _getMyOrder() {
+    return Container(
+      margin: EdgeInsets.only(top: 15.0),
+      width: ScreenUtil.getInstance().setWidth(750.0),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border:
+              Border(bottom: BorderSide(width: 0.5, color: Colors.black12))),
+      child: ListTile(
+        leading: Icon(
+          Icons.list,
+          size: 30.0,
+        ),
+        title: Text(
+          '我的订单',
+          style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(34)),
+        ),
+        trailing: Icon(
+          Icons.keyboard_arrow_right,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
+  Widget _getOrderList() {
+    return Container(
+      padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+      width: ScreenUtil.getInstance().setWidth(750.0),
+      color: Colors.white,
+      child: Row(
+        children: <Widget>[
+          _getOrderItem('待付款', Icons.party_mode),
+          _getOrderItem('待发货', Icons.query_builder),
+          _getOrderItem('待收货', Icons.directions_car),
+          _getOrderItem('待评价', Icons.content_paste)
+        ],
+      ),
+    );
+  }
+
+  Widget _getOrderItem(String name, IconData iconData) {
+    return Container(
+      width: ScreenUtil.getInstance().setWidth(185.0),
+      child: Column(
+        children: <Widget>[
+          Icon(
+            iconData,
+            size: 30,
+          ),
+          Text(
+            name,
+            style: TextStyle(fontSize: ScreenUtil.getInstance().setSp(24.0)),
           )
         ],
       ),
