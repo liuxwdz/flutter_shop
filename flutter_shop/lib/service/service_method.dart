@@ -7,8 +7,7 @@ Future getHomePageContent() async {
   Response response;
   try {
     Dio dio = Dio();
-    dio.options.contentType =
-        ContentType.parse('application/x-www-form-urlencoded');
+    dio.options.contentType ='application/x-www-form-urlencoded';
     var data = {'lon': '114.06667', 'lat': '22.61667'};
     response = await dio.post(servicePath['homePageContent'], data: data);
     if (response.statusCode == 200) {
@@ -26,8 +25,7 @@ Future postRequest(String urlKey, {formData}) async {
   Response response;
   try {
     Dio dio = Dio();
-    dio.options.contentType =
-        ContentType.parse('application/x-www-form-urlencoded');
+    dio.options.contentType ='application/x-www-form-urlencoded';
     if (formData == null) {
       response = await dio.post(
         servicePath[urlKey],
